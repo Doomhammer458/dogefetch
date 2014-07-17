@@ -47,7 +47,44 @@ def ltc_usd():
 	r = requests.get(url)
 	out = r.json()['avg']
 	return out
-
+class bter_API():
+    def __init__(self):
+        import requests
+        url = 'http://data.bter.com/api/1/pairs/'
+	r = requests.get(url).json()
+        self.trading_pairs = r
+        
+        
+    def get_price(self,cur_a,cur_b):
+        """
+        returns the current exhange rate between currency A and Currency B
+        """
+        cur_a = cur_a.lower()
+        cur_b = cur_b.lower()
+        pair = cur_a+"_"+cur_b 
+        if pair not in self.trading_pairs:
+            pair = cur_b+"_"+cur_a
+            
+            
+            if pair not in self.trading_pairs:
+                raise Exception("trading pair not found")
+            else:
+                url = 'http://data.bter.com/api/1/ticker/'+pair
+                r = requests.get(url).json()
+                if r["result"]=="true":
+                    return r["avg"]**-1
+                else:
+                    raise Exception("Can not connect to API")
+            
+        else:
+            url = 'http://data.bter.com/api/1/ticker/'+pair
+            r = requests.get(url).json()
+            if r["result"]=="true":
+                return r["avg"]
+            else:
+                raise Exception("Can not connect to API")
+        
+"""        
 while True:
 	coin = raw_input("DOGE-USD [wow], LTC-USD [l], BTC-USD [b]? ")
 	if coin == "wow":
@@ -60,6 +97,8 @@ while True:
 		print "1 BTC = $" + str(btc_usd())
 		break
 	print "Invalid input (this is case sensitive!)"
+"""
+x = bter_API()
 
 # Return dogecoin value:
 # print doge_usd()
