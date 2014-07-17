@@ -15,7 +15,9 @@ class bter_API():
         cur_a = cur_a.lower()
         cur_b = cur_b.lower()
         pair = cur_a+"_"+cur_b 
+        
         if pair not in self.trading_pairs:
+            #check inverse pair
             pair = cur_b+"_"+cur_a
             
             
@@ -35,7 +37,7 @@ class bter_API():
             r = requests.get(url).json()
 
             if r["result"]=="true":
-                return float(r["price_type"])
+                return float(r[price_type])
             else:
                 raise Exception("Can not connect to API")
 x = bter_API()
